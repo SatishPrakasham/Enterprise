@@ -49,7 +49,7 @@ button[type="submit"] {
 
 .login-container {
             margin-top: 50;
-            margin-right: 800;
+            margin-right: 100;
             background-color: #f1dec9;
             color: #000;
             border-radius: 5px;
@@ -141,7 +141,7 @@ button[type="submit"] {
 </style>
 <body>
     
-    <form action="adminLoginCheck.php" method="POST">
+    <form action="admin.php" method="POST">
     <div class="login-container">
         <h1>Admin Login</h1>
         <div class="form-group">

@@ -1,10 +1,28 @@
+<?php
+// user_promotion.php
+
+// Include the database connection file
+require_once 'config.php';
+
+// Fetch promotions from the database
+$result = $conn->query("SELECT * FROM promotions");
+
+if (!$result) {
+    die("Query Failed: " . $conn->error);
+}
+
+// Close the connection
+$conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flex Sports Wear</title>
-   
+    <title>Promotions - Flex Sports Wear</title>
+
+    <!-- jQuery -->
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
 
     <!-- Bootstrap CSS -->
@@ -13,22 +31,20 @@
     <!-- Bootstrap Js -->
     <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js'></script>
     
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <!-- Your CSS -->
-     <style>
-         
-         body    {
-             background-color: #dedede;
-                 
-         }
-        
+    <style>
+        /* Reuse the same styles from the main page */
+        body {
+            background-color: #dedede;
+        }
+
         .navbar {
             padding: 0px 100px; /* Adjust the padding */
-            
-            
         }
-       
+
         .navbar-nav .nav-link {
             font-size: 15px;
             font-family: Copperplate;
@@ -38,7 +54,7 @@
         .navbar-nav .nav-link:hover {
             border-bottom: 1px solid;
         }
-            
+        
         .member-button {
             margin-left: 700px;
             color: #FFFFFF;
@@ -46,15 +62,11 @@
             border: none;
         }
 
-        * {
-            box-sizing: border-box;
-        }
-
-        .search-box{
+        .search-box {
             width: fit-content;
             height: fit-content;
             position: relative;
-}
+        }
 
         .input-search {
             height: 30px;
@@ -90,20 +102,18 @@
             top: -25px; /* Adjusted top position for responsiveness */
             transform: translateY(50%); /* Center vertically */
             color: #000000;
-            
         }
 
         .btn-search:focus ~ .input-search {
             width: 200px;
             border-radius: 10px;
             outline: none;
-                  
             border: none;
             border-bottom: 1px solid rgba(255, 255, 255, 0.5);
             transition: all 500ms cubic-bezier(0, 0.11, 0.35, 2);
         }
 
-        .input-search:focus{
+        .input-search:focus {
             width: 200px;
             border-radius: 20px;
             border: 10px;
@@ -112,159 +122,68 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.5);
             transition: all 500ms cubic-bezier(0, 0.11, 0.35, 2);
         }
-        
-       btn-profile {
-            
-            border: none;
-            font-size: 20px;
-            outline: none;
-            cursor: pointer;
-            border-radius: 50%;
-            position: absolute;
-            right: -90px; /* Adjusted position */
-            top: -25px; /* Adjusted top position for responsiveness */
-            transform: translateY(50%); /* Center vertically */
-            color: #000000;
-        }
-        
-        .container{
-            
+
+        .container {
             display: flex;
             align-items: center;
             justify-content: center;
             margin-top: 60px;
             margin-bottom: 60px;
-            
-            
-        }
-        
-        .gallery{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .img-box{
-            width: 200px;
-            height: 500px;
-            margin: 10px;
-            border-radius: 50px;
-            background: url(Adidas.png);
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            transition: width 0.5s;
-            display: flex;
             flex-direction: column;
-            padding: 30px;   
-                
         }
-        
-        .img-box h3 {
-            margin-top: 5px; /* Adjust vertical placement */
-            margin-bottom: auto; /* Adjust vertical placement */
-            margin-left: auto; /* Adjust horizontal placement */
-            margin-right: auto; /* Adjust horizontal placement */
+
+        .box {
+            width: 300px;
+            margin: 10px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .box img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .box h3 {
             font-size: 21px;
             font-family: Copperplate;
-            
-            }   
-            
-        .img-box:nth-child(2){
-            background: url(Nike.png);
-            background-size: cover;
-            background-position: center;
-            
+            margin-bottom: 10px; /* Adjusted */
         }
-        
-        .img-box:nth-child(3){
-            background: url(UA.png);
-            background-size: cover;
-            background-position: center;
+
+        .box p {
+            font-size: 15px;
         }
-        
-        .img-box:nth-child(4){
-            background: url(Flex.png);
-            background-size: cover;
-            background-position: center;
+
+        .box .discounted-price {
+            color: #e74c3c;
+            font-size: 18px;
+            font-weight: bold;
         }
-        
-        
-        .img-box:hover{
-            width:650px;
-            cursor: pointer;
-            
+
+        .box .dates {
+            font-size: 13px;
+            color: #777;
         }
-        
-        .container {
-  position: relative;
-  font-family: sans-serif;
-  color:#FFFFFF;
-  
-}
 
+        .box .requirements {
+            font-size: 13px;
+            color: #555;
+        }
 
-        .container .box {
-  width: 550px;
-  height: 15.875em;
-  padding: 1rem;
-  color: #000000;
-  border: 1px solid rgba(255, 255, 255, 0.222);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 0.7rem;
-  transition: all ease 0.3s;
-  background-color:#FFFFFF;
-}
-
-        .container .box {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-        .container .box .title {
-  font-size: 2rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-}
-
-        .container .box div strong {
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-        .container .box div p {
-  margin: 0;
-  font-size: 0.9em;
-  font-weight: 300;
-  letter-spacing: 0.1em;
-}
-
-.container .box div span {
-  font-size: 0.7rem;
-  font-weight: 300;
-}
-
-.container .box div span:nth-child(3) {
-  font-weight: 500;
-  margin-right: 0.2rem;
-}
-
-.container .box:hover {
-  box-shadow:  7px 7px 14px #323232,
-             -7px -7px 14px #535353;
-  border: 1px solid rgba(255, 255, 255, 0.454);
-}
-
-        
-</style>
-
+        .header-title {
+            font-size: 2rem;
+            font-family: Copperplate;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <!-- Your HTML content goes here -->
+    <!-- Navigation Bar -->
     <div class="member-navbar" style="background-color: #000000;">
         <button type="button" class="member-button">FREE SHIPPING FOR MEMBERS</button>
-        
     </div>
     
     <div class="navigation-wrap bg-light start-header start-style">
@@ -300,13 +219,17 @@
                                     <a class="nav-link" href="#">Agency</a>
                                 </li>
                                 <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a class="nav-link" hrfe="#">Services</a>
+                                    <a class="nav-link" href="#">Services</a>
                                 </li>
                                 <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
                                     <a class="nav-link" href="#">Journal</a>
                                 </li>
                                 <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
                                     <a class="nav-link" href="#">Contact</a>
+                                </li>
+                                <!-- Promotions Link -->
+                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                    <a class="nav-link" href="user_promotion.php">Promotions</a>
                                 </li>
                                 <!-- Profile Icon -->
                                 <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
@@ -316,7 +239,7 @@
                                 <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
                                     <div class="search-box">
                                         <button class="btn-search"><i class="fas fa-search"></i></button>
-                                        <input type="text" class="input-search" placeholder=" Type to Search..." style="font-size:15px;">
+                                        <input type="text" class="input-search" placeholder="Search">
                                     </div>
                                 </li>
                             </ul>
@@ -326,29 +249,24 @@
             </div>
         </div>
     </div>
-                                <div class="container">
-                                    <div class="gallery">
-                                        <div class="img-box"><h3>Adidas</h3></div>
-                                        <div class="img-box"><h3>Nike</h3></div>
-                                        <div class="img-box"><h3>Under Armour</h3></div>
-                                        <div class="img-box"><h3>Puma</h3></div>
-                                        
-                                    </div>
-        
-        </div>
-    
-   <marquee behavior="scroll" direction="right" scrollamount="15" style="font-size: 50px; font-family: Copperplate; margin-bottom: 60px;">SHOP NOW</marquee>
 
-   <div class="container">
-  <div class="box">
-    <span class="title">SHOES</span>
-    <div>
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="header-title">PROMOTIONS</h1>
+<?php if ($result->num_rows > 0):?>
+    <?php while ($row = $result->fetch_assoc()):?>
+        <div class="box">
+            <img alt="Promotion Image" src="<?php echo htmlspecialchars($row['image']);?>">
+            <p><?php echo $row['description'];?></p>
+            <p class="discounted-price">$<?php echo $row['discounted_price'];?></p>
+            <p class="dates">From: <?php echo $row['start_date'];?> To: <?php echo $row['end_date'];?></p>
+            <p class="requirements">Requirements: <?php echo $row['requirement'];?></p>
+          
+        </div>
+    <?php endwhile;?>
+<?php else:?>
+    <p>No promotions available at the moment.</p>
+<?php endif;?>
     </div>
-  </div>
-</div>
-   
-</body> 
-    
-    
 </body>
 </html>
