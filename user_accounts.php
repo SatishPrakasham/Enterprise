@@ -72,10 +72,10 @@ $result = $conn->query("SELECT * FROM users");
                     <?php while ($row = $result->fetch_assoc()) { ?>
                     <tr>
                         <td><?php echo $row['id']; ?></td>
-                        <td><?php echo $row['name']; ?></td>
-                        <td><?php echo $row['email']; ?></td>
+                        <td><?php echo $row['uname']; ?></td>
+                        <td><?php echo $row['user_email']; ?></td>
                         <td><?php echo $row['address']; ?></td>
-                        <td><?php echo $row['contact_number']; ?></td>
+                        <td><?php echo $row['pnumber']; ?></td>
                         <td>
                             <form action="user_accounts.php" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="delete_user">

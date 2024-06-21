@@ -4,14 +4,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pet Care Treasury</title>
+    <title>Flex SportWear</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital@1&display=swap" rel="stylesheet">
-
     <link rel="shortcut icon" href="#" type="image/x-icon">
-
     <style>
         body {
             background: url("background.jpg");
@@ -25,7 +23,6 @@
             height: 100vh;
         }
 
-        /* Reset some default styles for form elements */
         input[type="text"],
         input[type="password"],
         button[type="submit"] {
@@ -37,8 +34,6 @@
         }
 
         .login-container {
-            margin-top: 50;
-            margin-right: 800;
             background-color: #f1dec9;
             color: #000;
             border-radius: 5px;
@@ -68,7 +63,6 @@
             font-weight: 800;
             margin-bottom: 5px;
             color: #000;
-            /* Label text color */
         }
 
         .form-group input {
@@ -77,17 +71,13 @@
             border-radius: 2em 1em 4em / 0.5em 3em;
             padding: 10px;
             background-color: rgba(255, 255, 255, 0.1);
-            /* Input background color with transparency */
             color: #000;
-            /* Input text color */
             transition: border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
         }
 
         .form-group input:focus {
             border-color: #007bff;
-            /* Highlight border color on focus */
             background-color: rgba(255, 255, 255, 0.2);
-            /* Highlight input background color on focus */
         }
 
         .login-button,
@@ -96,12 +86,9 @@
             color: #fff;
             border: none;
             border-radius: 50px;
-            /* Make it a circle */
             padding: 15px 30px;
-            /* Increase padding for a larger button */
             cursor: pointer;
             font-size: 18px;
-            /* Slightly larger font size */
             transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
         }
 
@@ -109,7 +96,6 @@
         .login-button:hover {
             background-color: #61c6d4;
             transform: scale(1.05);
-            /* Scale up on hover for a creative effect */
         }
 
         @media screen and (max-width: 768px) {
@@ -118,7 +104,6 @@
             }
         }
 
-        /* Back button styles */
         .back-button {
             position: absolute;
             top: 20px;
@@ -128,7 +113,6 @@
             cursor: pointer;
         }
     </style>
-
 </head>
 
 <body>
@@ -144,11 +128,8 @@
                 <label for="password">Password:</label>
                 <input type="password" class="pass" id="pass" name="pass" placeholder="Enter your password" required>
             </div>
-
             <button type="submit" class="login-button"> Login <i class="fa-solid fa-right-to-bracket fa-fade"></i></button>
-            <button class="register-button" type="submit" onclick="window.location.href = 'registerUser.php';"> Register <i
-                    class="fa-solid fa-address-card fa-fade"></i></button>
-
+            <button type="button" class="register-button" onclick="window.location.href = 'registerUser.php';"> Register <i class="fa-solid fa-address-card fa-fade"></i></button>
             <a href="adminLoginPage.php">Sign in as Admin</a>
         </div>
     </form>

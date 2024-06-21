@@ -142,3 +142,4 @@ function logout() {
     alert('Logged out');
     window.location.href = 'login.php'; // Example redirect, modify as needed
 }
+

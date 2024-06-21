@@ -1,5 +1,5 @@
 <?php
-// admin.php
+// wadmin.php
 
 // Include the database connection file
 require_once 'config.php';
@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['edit_product'])) {
         // Fetch product details for editing
         $product_id = intval($_POST['edit_product']);
-        $stmt = $conn->prepare("SELECT * FROM products WHERE id = ?");
+        $stmt = $conn->prepare("SELECT * FROM wproducts WHERE id = ?");
         $stmt->bind_param("i", $product_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -23,8 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// Fetch products to display
-$result = $conn->query("SELECT * FROM products");
+// Fetch WProducts to display
+$result = $conn->query("SELECT * FROM wproducts");
 
 // HTML and Bootstrap for the admin page
 ?>
@@ -33,7 +33,7 @@ $result = $conn->query("SELECT * FROM products");
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
+    <title>Admin Panel - WProduct</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -49,6 +49,9 @@ $result = $conn->query("SELECT * FROM products");
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link" href="admin.php">Product</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="wadmin.php">WProduct</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="user_accounts.php"> User Account</a>
@@ -74,9 +77,9 @@ $result = $conn->query("SELECT * FROM products");
 
     <!-- Main Content -->
     <div class="container mt-5">
-        <h2>Add New Product</h2>
-        <form action="process.php" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="action" value="add_product">
+        <h2>Add New WProduct</h2>
+        <form action="wprocess.php" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="add_wproduct">
             <div class="mb-3">
                 <label for="productName" class="form-label">Product Name</label>
                 <input type="text" class="form-control" id="productName" name="name" required>
@@ -105,13 +108,13 @@ $result = $conn->query("SELECT * FROM products");
                 <label for="productImage" class="form-label">Product Image</label>
                 <input type="file" class="form-control" id="productImage" name="image" required>
             </div>
-            <button type="submit" class="btn btn-primary">Add Product</button>
+            <button type="submit" class="btn btn-primary">Add WProduct</button>
         </form>
 
         <?php if (isset($product)) { ?>
-            <h2>Edit Product</h2>
-            <form action="process.php" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="action" value="update_product">
+            <h2>Edit WProduct</h2>
+            <form action="wprocess.php" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="action" value="update_wproduct">
                 <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
                 <div class="mb-3">
                     <label for="editProductName" class="form-label">Product Name</label>
@@ -141,11 +144,11 @@ $result = $conn->query("SELECT * FROM products");
                     <label for="editProductImage" class="form-label">Product Image</label>
                     <input type="file" class="form-control" id="editProductImage" name="image">
                 </div>
-                <button type="submit" class="btn btn-primary">Update Product</button>
+                <button type="submit" class="btn btn-primary">Update WProduct</button>
             </form>
         <?php } ?>
 
-        <h2 class="mt-5">Existing Products</h2>
+        <h2 class="mt-5">Existing WProducts</h2>
         <table class="table">
             <thead>
                 <tr>
@@ -173,13 +176,13 @@ $result = $conn->query("SELECT * FROM products");
                         <td><img src="<?php echo $row['image']; ?>" width="100"></td>
                         <td>
                             <!-- Edit Product Form -->
-                            <form action="admin.php" method="post" style="display: inline-block;">
+                            <form action="wadmin.php" method="post" style="display: inline-block;">
                                 <input type="hidden" name="edit_product" value="<?php echo $row['id']; ?>">
                                 <button type="submit" class="btn btn-sm btn-warning">Edit</button>
                             </form>
                             <!-- Delete Product Form -->
-                            <form action="process.php" method="post" style="display: inline-block;">
-                                <input type="hidden" name="action" value="delete_product">
+                            <form action="wprocess.php" method="post" style="display: inline-block;">
+                                <input type="hidden" name="action" value="delete_wproduct">
                                 <input type="hidden" name="product_id" value="<?php echo $row['id']; ?>">
                                 <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this product?')">Delete</button>
                             </form>

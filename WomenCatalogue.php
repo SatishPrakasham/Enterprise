@@ -187,8 +187,7 @@
     </style>
 
 </head>
-<body>
-    <div class="member-navbar" style="background-color: #000000;">
+<div class="member-navbar" style="background-color: #000000;">
         <a href="userloginpage.php"> <button type="button" class="member-button">FREE SHIPPING FOR MEMBERS</button></a>
     </div>
     
@@ -197,61 +196,52 @@
             <div class="row">
                 <div class="col-12">
                     <nav class="navbar navbar-expand-md navbar-light">
-                        <img src="logo.png" alt="" style="width: 200px; height:120px; margin-left:-150px;">	
+                        <a href="index.php">
+                           <img src="logo.jpg" alt="Logo" style="width: 200px; height:120px; margin-left:-150px;">	</a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
+                        
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav ml-auto py-4 py-md-0">
+                               <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
+        <a class="nav-link" href="MenCatalogue.php" role="button" aria-haspopup="true" aria-expanded="false">MEN</a>
+    </li>
                                 <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
-                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">MEN</a>
-                                    <div class="dropdown-menu" style="margin-left:150px">
-                                        <a class="dropdown-item" href="#">Clothing</a>
-                                        <a class="dropdown-item" href="#">Shoes</a>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                    </div>
+        <a class="nav-link" href="WomenCatalogue.php" role="button" aria-haspopup="true" aria-expanded="false">WOMEN</a>
+    </li>
+                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                    <a class="nav-link" href="">Order History</a>
+                                </li>
+                               
+                               
+                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                    <a class="nav-link" href="user_promotion.php">Promotion</a>
                                 </li>
                                 <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">WOMEN</a>
-                                    <div class="dropdown-menu" style="margin-left:250px">
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                    </div>
+                                    <a class="nav-link" href="feedbackpage.php">Feedback</a>
                                 </li>
+                                <!-- Profile Icon -->
                                 <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a class="nav-link" href="#">Agency</a>
-                                </li>
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a class="nav-link" hrfe="#">Services</a>
-                                </li>
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a class="nav-link" href="#">Journal</a>
-                                </li>
-                                <li class="nav-item pl-4 -md-0 ml-0 ml-md-4">
-                                    <a class="nav-link" href="#">Contact</a>
-                                </li>
+    <a class="btn-profile" href="profilepage.php">
+        <i class="fas fa-user"></i>
+    </a>
+</li>
+                                <!-- Search Box -->
                                 <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
                                     <div class="search-box">
                                         <button class="btn-search"><i class="fas fa-search"></i></button>
-                                        <input type="text" class="input-search" placeholder="Type to Search">
+                                        <input type="text" class="input-search" placeholder=" Type to Search..." style="font-size:15px;">
                                     </div>
                                 </li>
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <div class="profile-box">
-                                        <button class="btn-profile"><i class="fas fa-user-circle"></i></button>
-                                    </div>
-                                </li>
-                            </ul>	
+                            </ul>
                         </div>
-                    </nav>		
+                    </nav>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <div class="text">Womens</div>
 
     <div class="container mt-5">
@@ -342,7 +332,7 @@
             </div>
             <div class="col-md-4">
                 <div class="card">
-                    <img src="Womenbottom3.png" alt="Card image">
+                    <img src="Womenbottom3.jpg" alt="Card image">
                     <div class="card-body">
                         <h5 class="card-title">Nike Runner Shorts</h5>
                         <p class="card-text">Enhance muscle support and recovery with these compression shorts, designed to reduce muscle fatigue and soreness during intense workouts, featuring a snug fit and stretchy fabric.</p>
@@ -489,6 +479,3 @@
 
 </body>
 </html>
-
-
-                            

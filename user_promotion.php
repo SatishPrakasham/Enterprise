@@ -1,51 +1,32 @@
-<?php
-// user_promotion.php
-
-// Include the database connection file
-require_once 'config.php';
-
-// Fetch promotions from the database
-$result = $conn->query("SELECT * FROM promotions");
-
-if (!$result) {
-    die("Query Failed: " . $conn->error);
-}
-
-// Close the connection
-$conn->close();
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Promotions - Flex Sports Wear</title>
-
-    <!-- jQuery -->
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+    <title>User Promotions</title>
+   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <!-- Bootstrap CSS -->
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
 
     <!-- Bootstrap Js -->
-    <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js'></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <!-- Your CSS -->
     <style>
-        /* Reuse the same styles from the main page */
         body {
             background-color: #dedede;
         }
-
+        
         .navbar {
             padding: 0px 100px; /* Adjust the padding */
         }
-
+       
         .navbar-nav .nav-link {
+            margin-right: 20px;
             font-size: 15px;
             font-family: Copperplate;
             transition: border-bottom 0.9s ease;
@@ -54,12 +35,16 @@ $conn->close();
         .navbar-nav .nav-link:hover {
             border-bottom: 1px solid;
         }
-        
+            
         .member-button {
-            margin-left: 700px;
+            margin-left: 100px;
             color: #FFFFFF;
             background-color: transparent;
             border: none;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         .search-box {
@@ -122,68 +107,90 @@ $conn->close();
             border-bottom: 1px solid rgba(255, 255, 255, 0.5);
             transition: all 500ms cubic-bezier(0, 0.11, 0.35, 2);
         }
-
-        .container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 60px;
-            margin-bottom: 60px;
-            flex-direction: column;
+        
+        .btn-profile {
+            border: none;
+            font-size: 20px;
+            outline: none;
+            cursor: pointer;
+            border-radius: 50%;
+            position: absolute;
+            right: 10px; /* Adjusted position */
+            top: 25px; /* Adjusted top position for responsiveness */
+            transform: translateY(50%); /* Center vertically */
+            color: #000000;
+        }
+        
+        .card {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease-in-out;
+            margin-bottom: 20px;
         }
 
-        .box {
-            width: 300px;
-            margin: 10px;
-            padding: 20px;
-            border-radius: 10px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        .card:hover {
+            transform: translateY(-10px);
         }
 
-        .box img {
+        .card img {
             width: 100%;
-            border-radius: 10px;
+            height: auto;
+            object-fit: cover;
         }
 
-        .box h3 {
-            font-size: 21px;
-            font-family: Copperplate;
-            margin-bottom: 10px; /* Adjusted */
+        .card-body {
+            padding: 15px;
         }
 
-        .box p {
-            font-size: 15px;
-        }
-
-        .box .discounted-price {
-            color: #e74c3c;
-            font-size: 18px;
+        .card-title {
+            font-size: 1.25rem;
             font-weight: bold;
         }
 
-        .box .dates {
-            font-size: 13px;
-            color: #777;
+        .card-text {
+            font-size: 1rem;
+            color: #666;
         }
 
-        .box .requirements {
-            font-size: 13px;
-            color: #555;
-        }
-
-        .header-title {
-            font-size: 2rem;
-            font-family: Copperplate;
-            margin-bottom: 30px;
+        /* Styles for the text */
+        .text {
+            margin-top: 50px; /* Spacing from the navbar */
+            text-transform: uppercase;
+            font-family: verdana;
+            font-size: 6em; /* Adjust font size for responsiveness */
+            font-weight: 700;
+            color: #f5f5f5;
+            text-shadow: 1px 1px 1px #919191,
+                        1px 2px 1px #919191,
+                        1px 3px 1px #919191,
+                        1px 4px 1px #919191,
+                        1px 5px 1px #919191,
+                        1px 6px 1px #919191,
+                        1px 7px 1px #919191,
+                        1px 8px 1px #919191,
+                        1px 9px 1px #919191,
+                        1px 10px 1px #919191,
+                        1px 18px 6px rgba(16,16,16,0.4),
+                        1px 22px 10px rgba(16,16,16,0.2),
+                        1px 25px 35px rgba(16,16,16,0.2),
+                        1px 30px 60px rgba(16,16,16,0.4);
             text-align: center;
         }
+
+        /* Floating Cart Button */
+        .floating-cart {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
     </style>
+
 </head>
 <body>
-    <!-- Navigation Bar -->
     <div class="member-navbar" style="background-color: #000000;">
-        <button type="button" class="member-button">FREE SHIPPING FOR MEMBERS</button>
+        <a href="userloginpage.php"> <button type="button" class="member-button">FREE SHIPPING FOR MEMBERS</button></a>
     </div>
     
     <div class="navigation-wrap bg-light start-header start-style">
@@ -191,50 +198,36 @@ $conn->close();
             <div class="row">
                 <div class="col-12">
                     <nav class="navbar navbar-expand-md navbar-light">
-                        <img src="logo.png" alt="" style="width: 200px; height:120px; margin-left:-150px;">	
+                        <a href="index.php">
+                            <img src="logo.jpg" alt="Logo" style="width: 200px; height:120px; margin-left:-150px;">	
+                        </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
+                        
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav ml-auto py-4 py-md-0">
+                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                    <a class="nav-link" href="MenCatalogue.php" role="button" aria-haspopup="true" aria-expanded="false">MEN</a>
+                                </li>
                                 <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
-                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">MEN</a>
-                                    <div class="dropdown-menu" style="margin-left:150px">
-                                        <a class="dropdown-item" href="#">Clothing</a>
-                                        <a class="dropdown-item" href="#">Shoes</a>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                    </div>
+                                    <a class="nav-link" href="WomenCatalogue.php" role="button" aria-haspopup="true" aria-expanded="false">WOMEN</a>
                                 </li>
                                 <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">WOMEN</a>
-                                    <div class="dropdown-menu" style="margin-left:250px">
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                    </div>
+                                    <a class="nav-link" href="">Order History</a>
+                                </li>
+                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
+                                    <a class="nav-link" href="user_promotion.php">Promotion</a>
                                 </li>
                                 <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a class="nav-link" href="#">Agency</a>
-                                </li>
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a class="nav-link" href="#">Services</a>
-                                </li>
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a class="nav-link" href="#">Journal</a>
-                                </li>
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a class="nav-link" href="#">Contact</a>
-                                </li>
-                                <!-- Promotions Link -->
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a class="nav-link" href="user_promotion.php">Promotions</a>
+                                    <a class="nav-link" href="feedbackpage.php">Feedback</a>
                                 </li>
                                 <!-- Profile Icon -->
                                 <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <button class="btn-profile"><i class="fas fa-user"></i></button>
-                                </li>
+    <a class="btn-profile" href="profilepage.php">
+        <i class="fas fa-user"></i>
+    </a>
+</li>
                                 <!-- Search Box -->
                                 <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
                                     <div class="search-box">
@@ -244,29 +237,66 @@ $conn->close();
                                 </li>
                             </ul>
                         </div>
-                    </nav>
+                    </nav>		
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="container">
-        <h1 class="header-title">PROMOTIONS</h1>
-<?php if ($result->num_rows > 0):?>
-    <?php while ($row = $result->fetch_assoc()):?>
-        <div class="box">
-            <img alt="Promotion Image" src="<?php echo htmlspecialchars($row['image']);?>">
-            <p><?php echo $row['description'];?></p>
-            <p class="discounted-price">$<?php echo $row['discounted_price'];?></p>
-            <p class="dates">From: <?php echo $row['start_date'];?> To: <?php echo $row['end_date'];?></p>
-            <p class="requirements">Requirements: <?php echo $row['requirement'];?></p>
-          
+    <!-- Promotion Content -->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                  <div class="text">Promotions</div>
+                <?php
+                // Database connection
+                $hostname = "localhost";
+                $username = "root";
+                $password = "";
+                $database_name = "flex_db"; // Replace with your actual database name
+
+                // Create connection
+                $conn = new mysqli($hostname, $username, $password, $database_name);
+
+                // Check connection
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+
+                // Query to fetch promotions from database
+                $sql = "SELECT * FROM promotions";
+                $result = $conn->query($sql);
+
+                // Display promotions
+                if ($result->num_rows > 0) {
+                    while($row = $result->fetch_assoc()) {
+                        echo "<div class='card mb-3'>";
+                        if (!empty($row['image'])) {
+                            echo "<img src='" . $row['image'] . "' class='card-img-top' alt='Promotion Image'>";
+                        }
+                        echo "<div class='card-body'>";
+                        echo "<h5 class='card-title'>" . $row['description'] . "</h5>";
+                        echo "<p class='card-text'>Discounted Price: $" . $row['discounted_price'] . "</p>";
+                        echo "<p class='card-text'>Start Date: " . $row['start_date'] . "</p>";
+                        echo "<p class='card-text'>End Date: " . $row['end_date'] . "</p>";
+                        echo "<p class='card-text'>Requirement: " . $row['requirement'] . "</p>";
+                        echo "</div>";
+                        echo "</div>";
+                    }
+                } else {
+                    echo "<p>No promotions available.</p>";
+                }
+
+                // Close connection
+                $conn->close();
+                ?>
+            </div>
         </div>
-    <?php endwhile;?>
-<?php else:?>
-    <p>No promotions available at the moment.</p>
-<?php endif;?>
     </div>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
 </body>
 </html>

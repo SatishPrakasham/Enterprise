@@ -7,9 +7,9 @@ require_once 'config.php'; // Adjust the path as per your file structure
 // Fetch orders to display
 $query = "
     SELECT orders.*, 
-           users.username AS user_name, 
+           users.uname AS user_name, 
            users.address AS user_address, 
-           users.contact_number AS user_contact, 
+           users.pnumber AS user_contact, 
            products.name AS product_name 
     FROM orders 
     JOIN users ON orders.user_id = users.id 
@@ -99,9 +99,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
                     <?php while ($row = $result->fetch_assoc()) { ?>
                     <tr>
                         <td><?php echo $row['id']; ?></td>
-                        <td><?php echo $row['user_name']; ?></td>
+                        <td><?php echo $row['user_fullname']; ?></td>
                         <td><?php echo $row['user_address']; ?></td>
-                        <td><?php echo $row['user_contact']; ?></td>
+                        <td><?php echo $row['user_pnumber']; ?></td>
                         <td><?php echo $row['product_name']; ?></td>
                         <td><?php echo $row['total_amount']; ?></td>
                         <td><?php echo $row['order_date']; ?></td>
