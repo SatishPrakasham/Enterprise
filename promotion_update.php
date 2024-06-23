@@ -72,7 +72,7 @@ $result = $conn->query("SELECT * FROM promotions");
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Navigation Bar -->
+      <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="admin_dashboard.php">Admin Panel</a>
@@ -85,6 +85,9 @@ $result = $conn->query("SELECT * FROM promotions");
                         <a class="nav-link" href="admin.php">Product</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="wadmin.php">WProduct</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="user_accounts.php"> User Account</a>
                     </li>
                     <li class="nav-item">
@@ -94,7 +97,10 @@ $result = $conn->query("SELECT * FROM promotions");
                         <a class="nav-link" href="check_user_order.php"> User Order</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="promotion_update.php">Promotion Update Page</a>
+                        <a class="nav-link" href="promotion_update.php">Promotion Update Page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="feedbackview.php">Feedback</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">

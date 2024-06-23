@@ -1,45 +1,62 @@
 <?php
 
-include "config.php";
+include 'config.php';
 
-// Check if the user is logged in
-if (!isset($_SESSION['user_name'])) {
-    echo '<script>alert("You need to login first.")</script>';
-    echo '<script>location.href="userloginpage.php"</script>';
-    exit();
+$user_id = $_SESSION['user_id'];
+
+if(!isset($user_id)){
+   header('location:login.php');
+   exit; // Always exit after a redirect
 }
 
-$user_name = $_SESSION['user_name'];
+if(isset($_POST['update_cart'])){
+   $cart_id = $_POST['cart_id'];
+   $product_quantity = $_POST['product_quantity'];
+   $product_size = $_POST['product_size'];
 
-// Fetch user details from the database
-$stmt = $conn->prepare("SELECT name, email FROM users WHERE name = ?");
-$stmt->bind_param("s", $user_name);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows === 1) {
-    $user = $result->fetch_assoc();
-} else {
-    echo '<script>alert("User not found.")</script>';
-    echo '<script>location.href="userloginpage.php"</script>';
-    exit();
+   mysqli_query($conn, "UPDATE `cart` SET quantity = '$product_quantity', size = '$product_size' WHERE id = '$cart_id'") or die('query failed');
+   header('location:cart.php');
+   exit;
 }
 
-$stmt->close();
-$conn->close();
+if(isset($_GET['delete'])){
+   $delete_id = $_GET['delete'];
+   mysqli_query($conn, "DELETE FROM `cart` WHERE id = '$delete_id'") or die('query failed');
+   header('location:cart.php');
+   exit;
+}
+
+if(isset($_GET['delete_all'])){
+   mysqli_query($conn, "DELETE FROM `cart` WHERE user_id = '$user_id'") or die('query failed');
+   header('location:cart.php');
+   exit;
+}
+
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title>Flex Sports Wear</title>
+   
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
-</head>
-<style>
+
+    <!-- Bootstrap Js -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- Your CSS -->
+    <style>
         body {
             background-color: #dedede;
+            font-family: Arial, sans-serif;
         }
         
         .navbar {
@@ -140,6 +157,127 @@ $conn->close();
             top: 25px; /* Adjusted top position for responsiveness */
             transform: translateY(50%); /* Center vertically */
             color: #000000;
+        }
+        
+        .shopping-cart {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+        
+        .box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        
+        .box img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+        
+        .box .details {
+            flex: 1;
+        }
+        
+        .box .name {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .box .price {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .box .quantity-select {
+            display: flex;
+            align-items: center;
+        }
+        
+        .box .quantity-select label {
+            margin-right: 10px;
+        }
+        
+        .box .quantity-select input {
+            width: 50px;
+            padding: 5px;
+            text-align: center;
+        }
+        
+        .box .size-select {
+            margin-top: 10px;
+        }
+        
+        .box .size-select label {
+            margin-right: 10px;
+        }
+        
+        .box .size-select select {
+            padding: 5px;
+            width: 70px;
+        }
+        
+        .box .sub-total {
+            font-size: 16px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        
+        .cart-total {
+            margin-top: 20px;
+            text-align: right;
+        }
+        
+        .cart-total p {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .flex {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .option-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .btn.disabled {
+            pointer-events: none;
+            background-color: #ccc;
+        }
+        
+        .delete-btn {
+            color: red;
+            cursor: pointer;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+        
+        .delete-btn:hover {
+            text-decoration: underline;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 30px;
         }
               .site-footer
 {
@@ -305,9 +443,18 @@ $conn->close();
     font-weight:600
   }
 }
-        </style>
-        </head>
-        <div class="member-navbar" style="background-color: #000000;">
+        
+        .empty {
+            text-align: center;
+            font-size: 18px;
+            color: #999;
+            margin-top: 30px;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="member-navbar" style="background-color: #000000;">
         <a href="userloginpage.php"> <button type="button" class="member-button">FREE SHIPPING FOR MEMBERS</button></a>
     </div>
 <div class="navigation-wrap bg-light start-header start-style">
@@ -330,7 +477,7 @@ $conn->close();
                             <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
                                 <a class="nav-link" href="WomenCatalogue.php" role="button" aria-haspopup="true" aria-expanded="false">WOMEN</a>
                             </li>
-                             <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
                                 <a class="nav-link" href="order.php">Order History</a>
                             </li>
                             <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
@@ -358,24 +505,65 @@ $conn->close();
     </div>
 </div>
 
-<body>
-    <div class="container mt-5">
-        <h1 class="text-center">Profile Page</h1>
-        <div class="card">
-            <div class="card-header">
-                <h2><?php echo htmlspecialchars($user['name']); ?>'s Profile</h2>
+    <section class="shopping-cart">
+
+        <h1 class="title">Cart</h1>
+
+        <div class="box-container">
+            <?php
+            $grand_total = 0;
+            $select_cart = mysqli_query($conn, "SELECT * FROM `cart` WHERE user_id = '$user_id'") or die('query failed');
+            if(mysqli_num_rows($select_cart) > 0){
+                while($fetch_cart = mysqli_fetch_assoc($select_cart)){   
+            ?>
+            <div class="box">
+                <a href="cart.php?delete=<?php echo $fetch_cart['id']; ?>" class="fas fa-times delete-btn" onclick="return confirm('Delete this from cart?');"></a>
+                 <img src="<?php echo $fetch_cart['image']; ?>" alt="Product Image" class="card-img-top">
+                <div class="details">
+                    <div class="name"><?php echo $fetch_cart['name']; ?></div>
+                    <div class="price">RM<?php echo $fetch_cart['price']; ?></div>
+                    <!-- Form to update quantity and size -->
+                    <form action="cart.php" method="post">
+                        <input type="hidden" name="cart_id" value="<?php echo $fetch_cart['id']; ?>">
+                        <!-- Quantity selector -->
+                        <div class="quantity-select">
+                            <label for="product_quantity">Quantity:</label>
+                            <input type="number" name="product_quantity" value="<?php echo $fetch_cart['quantity']; ?>" min="1" max="10"> <!-- Adjust max quantity as needed -->
+                        </div>
+                        <!-- Size selector -->
+                        <div class="size-select">
+                            <label for="product_size">Size:</label>
+                            <select name="product_size">
+                                <option value="S" <?php if($fetch_cart['size'] == 'S') echo 'selected'; ?>>S</option>
+                                <option value="M" <?php if($fetch_cart['size'] == 'M') echo 'selected'; ?>>M</option>
+                                <option value="L" <?php if($fetch_cart['size'] == 'L') echo 'selected'; ?>>L</option>
+                            </select>
+                        </div>
+                        <input type="submit" name="update_cart" value="Update" class="btn btn-primary">
+                    </form>
+                    <!-- Subtotal -->
+                    <div class="sub-total">Subtotal: <span>RM<?php echo $fetch_cart['price'] * $fetch_cart['quantity']; ?></span></div>
+                </div>
             </div>
-            <div class="card-body">
-                <p><strong>Username:</strong> <?php echo htmlspecialchars($user['name']); ?></p>
-                <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
-               
-            </div>
-            <div class="card-footer text-center">
-                <a href="user_logout.php" class="btn btn-danger">Logout</a>
+            <?php
+                $grand_total += ($fetch_cart['price'] * $fetch_cart['quantity']);
+                }
+            }else{
+                echo '<p class="empty">Your cart is empty</p>';
+            }
+            ?>
+        </div>
+
+        <div class="cart-total">
+            <p>Grand Total: <span>RM<?php echo $grand_total; ?></span></p>
+            <div class="flex">
+                <a href="MenCatalogue.php" class="option-btn">Continue Shopping</a>
+                <a href="checkout.php" class="btn <?php echo ($grand_total > 1)?'':'disabled'; ?>">Proceed to Checkout</a>
             </div>
         </div>
-    </div>
-       <!-- Site footer -->
+
+    </section>
+   <!-- Site footer -->
 <footer class="site-footer">
     <div class="container">
         <div class="row">

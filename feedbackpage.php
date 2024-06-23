@@ -292,55 +292,53 @@
 <div class="member-navbar" style="background-color: #000000;">
         <a href="userloginpage.php"> <button type="button" class="member-button">FREE SHIPPING FOR MEMBERS</button></a>
     </div>
-    
-    <div class="navigation-wrap bg-light start-header start-style">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <nav class="navbar navbar-expand-md navbar-light">
-                        <a href="index.php">
-                           <img src="logo.jpg" alt="Logo" style="width: 200px; height:120px; margin-left:-150px;">	</a>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav ml-auto py-4 py-md-0">
-                               <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
-        <a class="nav-link" href="MenCatalogue.php" role="button" aria-haspopup="true" aria-expanded="false">MEN</a>
-    </li>
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
-        <a class="nav-link" href="WomenCatalogue.php" role="button" aria-haspopup="true" aria-expanded="false">WOMEN</a>
-    </li>
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a class="nav-link" href="">Order History</a>
-                                </li>
-                               
-                               
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a class="nav-link" href="#">Promotion</a>
-                                </li>
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a class="nav-link" href="feedbackpage.php">Feedback</a>
-                                </li>
-                                <!-- Profile Icon -->
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <button class="btn-profile"><i class="fas fa-user"></i></button>
-                                </li>
-                                <!-- Search Box -->
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <div class="search-box">
-                                        <button class="btn-search"><i class="fas fa-search"></i></button>
-                                        <input type="text" class="input-search" placeholder=" Type to Search..." style="font-size:15px;">
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>
-                </div>
+<div class="navigation-wrap bg-light start-header start-style">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav class="navbar navbar-expand-md navbar-light">
+                    <a href="index.php">
+                        <img src="logo.jpg" alt="Logo" style="width: 200px; height: 120px; margin-left: -150px;">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ml-auto py-4 py-md-0">
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
+                                <a class="nav-link" href="MenCatalogue.php" role="button" aria-haspopup="true" aria-expanded="false">MEN</a>
+                            </li>
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
+                                <a class="nav-link" href="WomenCatalogue.php" role="button" aria-haspopup="true" aria-expanded="false">WOMEN</a>
+                            </li>
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                <a class="nav-link" href="order.php">Order History</a>
+                            </li>
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                <a class="nav-link" href="user_promotion.php">Promotion</a>
+                            </li>
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                <a class="nav-link" href="feedbackpage.php">Feedback</a>
+                            </li>
+                            <!-- Profile Icon -->
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                <a class="btn-profile" href="profilepage.php">
+                                    <i class="fas fa-user"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                <a href="cart.php">
+                                    <i class="fas fa-shopping-cart"></i> <span></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
             </div>
         </div>
     </div>
+</div>
 
     <div class="container mt-5">
         <h2>Feedback</h2>
@@ -390,58 +388,51 @@
         </form>
     </div>
 
-
-    <footer class="site-footer">
-        <div class="container">
-          <div class="row">
-            <div class="col-sm-12 col-md-6">
-              <h6>About</h6>
-              <p class="text-justify">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem animi veniam laborum porro, recusandae minus delectus aperiam nemo obcaecati expedita.</p>
-            </div>
-
-            <div class="col-xs-6 col-md-3">
-              <h6>Categories</h6>
-              <ul class="footer-links">
-                <li><a href="#">MEN</a></li>
-                <li><a href="#">WOMEN</a></li>
-                <li><a href="#">KIDS</a></li>
-                <li><a href="#">ACCESSORIES</a></li>
-              </ul>
-            </div>
-
-            <div class="col-xs-6 col-md-3">
-              <h6>Quick Links</h6>
-              <ul class="footer-links">
-                <li><a href="#">About Us</a></li>
-                <li><a href="#">Contact Us</a></li>
-                <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">Terms of Service</a></li>
-              </ul>
-            </div>
-          </div>
-          <hr>
-        </div>
-        <div class="container">
-          <div class="row">
-            <div class="col-md-8 col-sm-6 col-xs-12">
-              <ul class="social-icons">
-                <li class="title">Follow us on</li>
-                <li><a class="facebook" href="#"><i class="fab fa-facebook"></i></a></li>
-                <li><a class="twitter" href="#"><i class="fab fa-twitter"></i></a></li>
-                <li><a class="linkedin" href="#"><i class="fab fa-linkedin"></i></a></li>
-                <li><a class="dribbble" href="#"><i class="fab fa-dribbble"></i></a></li>
-              </ul>
+   <!-- Site footer -->
+<footer class="site-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <h6>Categories</h6>
+                <ul class="footer-links">
+                    <li><a href="MenCatalogue.php">Men Catalogue</a></li>
+                    <li><a href="WomenCatalogue.php">Women Catalogue</a></li>
+                    <li><a href="order.php">Order History</a></li>
+                    <li><a href="user_promotion">Promotion</a></li>
+                </ul>
             </div>
             <div class="col-md-4 col-sm-6 col-xs-12">
-              <ul class="social-icons">
-                <li class="title">Contact us at</li>
-                <li>Email: contact@flexsportswear.com</li>
-                <li>Phone: +123 456 7890</li>
-              </ul>
+                <h6>Quick Links</h6>
+                <ul class="footer-links">
+                    <li><a href="feedbackpage.php">Feedback</a></li>
+                    <li><a href="cart.php">Cart</a></li>
+                    <li><a href="profilepage.php">Profile</a></li>
+                </ul>
             </div>
-          </div>
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <h6>About Us</h6>
+                <p class="text-justify">Flex Sport Wear is dedicated to providing high-quality sportswear for men and women. Explore our catalog and enjoy exclusive promotions.</p>
+            </div>
         </div>
-      </footer>
+        <hr>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+                <p class="copyright-text">Copyright &copy; 2024 All Rights Reserved by 
+                    <a href="#">Flex Sport Wear</a>.
+                </p>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <ul class="social-icons">
+                    <li><a class="facebook" href="#"><i class="fab fa-facebook"></i></a></li>
+                    <li><a class="twitter" href="#"><i class="fab fa-twitter"></i></a></li>
+                    <li><a class="linkedin" href="#"><i class="fab fa-linkedin"></i></a></li>  
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
 
 </body>
 </html>

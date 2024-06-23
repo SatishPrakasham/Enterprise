@@ -1,138 +1,227 @@
+<?php
+
+session_start();
+include 'config.php';
+
+
+if(isset($_POST['submit'])){
+   $email = mysqli_real_escape_string($conn, $_POST['email']);
+   $pass = mysqli_real_escape_string($conn, md5($_POST['password']));
+
+   $select_users = mysqli_query($conn, "SELECT * FROM `users` WHERE email = '$email' AND password = '$pass'") or die('query failed');
+
+   if(mysqli_num_rows($select_users) > 0){
+      $row = mysqli_fetch_assoc($select_users);
+
+      $_SESSION['user_name'] = $row['name'];
+      $_SESSION['user_email'] = $row['email'];
+      $_SESSION['user_id'] = $row['id'];
+      header('location: index.php');
+   } else {
+      $message[] = 'Incorrect email or password!';
+   }
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flex SportWear</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:ital@1&display=swap" rel="stylesheet">
-    <link rel="shortcut icon" href="#" type="image/x-icon">
-    <style>
-        body {
-            background: url("background.jpg");
-            background-size: cover;
-            font-family: 'Lato', sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Login</title>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:ital@1&display=swap">
+   <link rel="shortcut icon" href="#" type="image/x-icon">
+   <style>
+     /* General styling */
+body {
+   font-family: 'Lato', sans-serif;
+   margin: 0;
+   padding: 0;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   min-height: 100vh;
+   background: url("images/background.jpg") no-repeat center center fixed;
+   background-size: cover;
+   color: #fff;
+   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+}
 
-        input[type="text"],
-        input[type="password"],
-        button[type="submit"] {
-            appearance: none;
-            border: none;
-            outline: none;
-            padding: 10px;
-            margin: 0;
-        }
+.wrapper {
+   text-align: center;
+   background-color: rgba(0, 0, 0, 0.5);
+   padding: 40px;
+   border-radius: 10px;
+   box-shadow: 0px 0px 20px rgba(128, 128, 128, 0.8);
+   max-width: 500px;
+   width: 100%;
+   margin: 20px;
+}
 
-        .login-container {
-            background-color: #f1dec9;
-            color: #000;
-            border-radius: 5px;
-            box-shadow: 0px 0px 20px rgba(128, 128, 128, 0.8);
-            padding: 20px;
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-            transition: transform 0.3s ease-in-out;
-        }
+.header {
+   position: relative;
+}
 
-        .login-container.clicked {
-            transform: scale(0.78);
-        }
+.header h1 {
+   font-size: 48px;
+   margin-bottom: 20px;
+   color: #f1dec9;
+   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
+}
 
-        .login-container h1 {
-            margin-bottom: 20px;
-        }
+.admin-login {
+   position: absolute;
+   top: 20px;
+   right: 20px;
+}
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+.admin-button {
+   background-color: #a4907c;
+   color: #fff;
+   border: none;
+   border-radius: 50px;
+   padding: 10px 20px;
+   cursor: pointer;
+   font-size: 14px;
+   text-decoration: none;
+   transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
 
-        .form-group label {
-            display: block;
-            text-align: left;
-            font-weight: 800;
-            margin-bottom: 5px;
-            color: #000;
-        }
+.admin-button:hover {
+   background-color: #61c6d4;
+}
 
-        .form-group input {
-            width: 90%;
-            border: 2px solid #ccc;
-            border-radius: 2em 1em 4em / 0.5em 3em;
-            padding: 10px;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: #000;
-            transition: border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
-        }
+.login-container {
+   background-color: rgba(241, 222, 201, 0.9);
+   color: #000;
+   border-radius: 5px;
+   padding: 20px;
+   text-align: center;
+}
 
-        .form-group input:focus {
-            border-color: #007bff;
-            background-color: rgba(255, 255, 255, 0.2);
-        }
+.form-group {
+   margin-bottom: 20px;
+   text-align: left;
+}
 
-        .login-button,
-        .register-button {
-            background-color: #a4907c;
-            color: #fff;
-            border: none;
-            border-radius: 50px;
-            padding: 15px 30px;
-            cursor: pointer;
-            font-size: 18px;
-            transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
-        }
+.form-group label {
+   display: block;
+   font-weight: 800;
+   margin-bottom: 5px;
+   color: #000;
+}
 
-        .register-button:hover,
-        .login-button:hover {
-            background-color: #61c6d4;
-            transform: scale(1.05);
-        }
+.input-wrapper {
+   display: inline-block;
+   width: 100%;
+   max-width: 350px;
+}
 
-        @media screen and (max-width: 768px) {
-            .login-container {
-                max-width: 80%;
-            }
-        }
+.input-wrapper input, 
+.input-wrapper select {
+   width: 100%;
+   padding: 10px;
+   border: 2px solid #ccc;
+   border-radius: 5px;
+   background-color: rgba(255, 255, 255, 0.1);
+   color: #000;
+   font-size: 16px;
+   transition: border-color 0.3s ease-in-out;
+}
 
-        .back-button {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            font-size: 20px;
-            color: #000000;
-            cursor: pointer;
-        }
-    </style>
+.input-wrapper input:focus,
+.input-wrapper select:focus {
+   outline: none;
+   border-color: #61c6d4;
+}
+
+.login-button {
+   background-color: #a4907c;
+   color: #fff;
+   border: none;
+   border-radius: 50px;
+   padding: 15px 30px;
+   cursor: pointer;
+   font-size: 18px;
+   transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+   width: 100%;
+   max-width: 350px;
+}
+
+.login-button:hover {
+   background-color: #61c6d4;
+}
+
+.message {
+   background-color: #f44336;
+   color: white;
+   text-align: center;
+   padding: 10px;
+   margin-bottom: 15px;
+   border-radius: 5px;
+   display: <?php echo isset($message) && count($message) > 0 ? 'block' : 'none'; ?>;
+}
+
+.message i {
+   cursor: pointer;
+   float: right;
+   margin-top: -6px;
+   margin-right: -6px;
+   font-size: 18px;
+}
+
+@media screen and (max-width: 768px) {
+   .wrapper {
+      max-width: 80%;
+   }
+   .input-wrapper,
+   .login-button {
+      max-width: 100%;
+   }
+}
+   </style>
 </head>
-
 <body>
-    <a class="back-button" href="index.php">Back</a>
-    <form action="userLoginCheck.php" method="POST">
-        <div class="login-container">
-            <h1 style="font-family: Lucida Handwriting, sans-serif; color: #000000;">Login</h1>
+   <div class="wrapper">
+      <div class="header">
+         <h1>Flex Sport Wear</h1>
+         
+      </div>
+       <div class="admin-login">
+            <a href="admin_login.php" class="admin-button">Admin Login</a>
+         </div>
+      <div class="login-container">
+         <?php
+         if(isset($message)){
+            foreach($message as $msg){
+               echo '
+               <div class="message">
+                  <span>'.$msg.'</span>
+                  <i class="fas fa-times" onclick="this.parentElement.style.display=\'none\'"></i>
+               </div>
+               ';
+            }
+         }
+         ?>
+         <form action="" method="post">
+            <h3>Login Now</h3>
             <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" class="uname" id="uname" name="uname" placeholder="Enter your username" required>
+               <label for="email">Email</label>
+               <div class="input-wrapper">
+                  <input type="email" id="email" name="email" placeholder="Enter your email" required class="input">
+               </div>
             </div>
             <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" class="pass" id="pass" name="pass" placeholder="Enter your password" required>
+               <label for="password">Password</label>
+               <div class="input-wrapper">
+                  <input type="password" id="password" name="password" placeholder="Enter your password" required class="input">
+               </div>
             </div>
-            <button type="submit" class="login-button"> Login <i class="fa-solid fa-right-to-bracket fa-fade"></i></button>
-            <button type="button" class="register-button" onclick="window.location.href = 'registerUser.php';"> Register <i class="fa-solid fa-address-card fa-fade"></i></button>
-            <a href="adminLoginPage.php">Sign in as Admin</a>
-        </div>
-    </form>
+            <input type="submit" name="submit" value="Login Now" class="login-button">
+            <p>Don't have an account? <a href="RegisterUser.php">Register Now</a></p>
+         </form>
+      </div>
+   </div>
 </body>
-
 </html>

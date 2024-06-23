@@ -1,39 +1,31 @@
 <?php
-// check_user_order.php
+include 'config.php';
 
-// Include the database connection file
-require_once 'config.php'; // Adjust the path as per your file structure
+$admin_id = $_SESSION['admin_id'];
 
-// Fetch orders to display
-$query = "
-    SELECT orders.*, 
-           users.uname AS user_name, 
-           users.address AS user_address, 
-           users.pnumber AS user_contact, 
-           products.name AS product_name 
-    FROM orders 
-    JOIN users ON orders.user_id = users.id 
-    JOIN products ON orders.product_id = products.id";
+if(!isset($admin_id)){
+   header('location:login.php');
+   exit; // Always exit after header redirection
+}
 
-$result = $conn->query($query);
+if(isset($_POST['update_order'])){
+   if(isset($_POST['update_payment'])) {
+       $order_update_id = $_POST['order_id'];
+       $update_payment = $_POST['update_payment'];
+       mysqli_query($conn, "UPDATE `orders` SET payment_status = '$update_payment' WHERE id = '$order_update_id'") or die('query failed');
+       $message[] = 'Payment status has been updated!';
+   } else {
+       $message[] = 'Please select a payment status to update.';
+   }
+}
 
-// Handle update status
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'update_status') {
-    $order_id = $_POST['order_id'];
-    $status = $_POST['status'];
-    
-    // Prepare and execute update statement
-    $stmt = $conn->prepare("UPDATE orders SET status = ? WHERE id = ?");
-    $stmt->bind_param("si", $status, $order_id);
-    $stmt->execute();
-    $stmt->close();
-    
-    // Redirect to avoid form resubmission
-    header("Location: check_user_order.php");
-    exit;
+if(isset($_GET['delete'])){
+   $delete_id = $_GET['delete'];
+   mysqli_query($conn, "DELETE FROM `orders` WHERE id = '$delete_id'") or die('query failed');
+   header('location:check_user_order.php');
+   exit; // Always exit after header redirection
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,10 +33,72 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Check User Orders</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css"> <!-- Adjust the path to your CSS file -->
+    <link rel="stylesheet" href="styles.css"> 
+    <style>
+        /* Custom CSS for box styling */
+        .box-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .box {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .box p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .box span {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .option-btn {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .option-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .delete-btn {
+            color: #dc3545;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+        .delete-btn:hover {
+            text-decoration: underline;
+        }
+
+        .empty {
+            text-align: center;
+            font-size: 18px;
+            color: #999;
+            margin-top: 30px;
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
+      <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="admin_dashboard.php">Admin Panel</a>
@@ -57,16 +111,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
                         <a class="nav-link" href="admin.php">Product</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="user_accounts.php">User Account</a>
+                        <a class="nav-link" href="wadmin.php">WProduct</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="user_accounts.php"> User Account</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="admin_sales_report.php">Admin Sales Analytics Report</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="check_user_order.php">User Order</a>
+                        <a class="nav-link" href="check_user_order.php"> User Order</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="promotion_update.php">Promotion Update Page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="feedbackview.php">Feedback</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
@@ -79,50 +139,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     </nav>
 
     <!-- Main Content -->
-    <div class="container mt-5">
-        <h2>User Orders</h2>
-        <?php if ($result->num_rows > 0) { ?>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>User</th>
-                        <th>Address</th>
-                        <th>Contact</th>
-                        <th>Product</th>
-                        <th>Amount</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($row = $result->fetch_assoc()) { ?>
-                    <tr>
-                        <td><?php echo $row['id']; ?></td>
-                        <td><?php echo $row['user_fullname']; ?></td>
-                        <td><?php echo $row['user_address']; ?></td>
-                        <td><?php echo $row['user_pnumber']; ?></td>
-                        <td><?php echo $row['product_name']; ?></td>
-                        <td><?php echo $row['total_amount']; ?></td>
-                        <td><?php echo $row['order_date']; ?></td>
-                        <td>
-                            <form action="check_user_order.php" method="post" style="display:inline;">
-                                <input type="hidden" name="action" value="update_status">
-                                <input type="hidden" name="order_id" value="<?php echo $row['id']; ?>">
-                                <select name="status" class="form-select" onchange="this.form.submit()">
-                                    <option value="Pending" <?php if ($row['status'] == 'Pending') echo 'selected'; ?>>Pending</option>
-                                    <option value="Completed" <?php if ($row['status'] == 'Completed') echo 'selected'; ?>>Completed</option>
-                                </select>
-                            </form>
-                        </td>
-                    </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
-        <?php } else { ?>
-            <p>No user orders found.</p>
-        <?php } ?>
-    </div>
+    <section class="orders">
+        <div class="container mt-5">
+            <h1 class="title">Placed Orders</h1>
+
+            <div class="box-container">
+                <?php
+                $select_orders = mysqli_query($conn, "SELECT * FROM `orders`") or die('query failed');
+                if(mysqli_num_rows($select_orders) > 0){
+                    while($fetch_orders = mysqli_fetch_assoc($select_orders)){
+                ?>
+                <div class="box">
+                    <p> User ID: <span><?php echo $fetch_orders['user_id']; ?></span> </p>
+                    <p> Name: <span><?php echo $fetch_orders['name']; ?></span> </p>
+                    <p> Number: <span><?php echo $fetch_orders['number']; ?></span> </p>
+                    <p> Email: <span><?php echo $fetch_orders['email']; ?></span> </p>
+                    <p> Total Products: <span><?php echo $fetch_orders['total_products']; ?></span> </p>
+                    <p> Total Price: <span>RM<?php echo $fetch_orders['total_price']; ?></span> </p>
+                    <p> Payment Method: <span><?php echo $fetch_orders['method']; ?></span> </p>
+                    <form action="" method="post">
+                        <input type="hidden" name="order_id" value="<?php echo $fetch_orders['id']; ?>">
+                        <select name="update_payment">
+                            <option value="<?php echo $fetch_orders['payment_status']; ?>" selected disabled><?php echo $fetch_orders['payment_status']; ?></option>
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                        <input type="submit" value="Update" name="update_order" class="option-btn">
+                        <a href="check_user_order.php?delete=<?php echo $fetch_orders['id']; ?>" onclick="return confirm('Delete this order?');" class="delete-btn">Delete</a>
+                    </form>
+                </div>
+                <?php
+                    }
+                }else{
+                    echo '<p class="empty">No orders placed yet!</p>';
+                }
+                ?>
+            </div>
+        </div>
+    </section>
 
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>

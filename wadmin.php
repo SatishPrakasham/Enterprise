@@ -38,7 +38,7 @@ $result = $conn->query("SELECT * FROM wproducts");
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Navigation Bar -->
+      <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="admin_dashboard.php">Admin Panel</a>
@@ -65,6 +65,9 @@ $result = $conn->query("SELECT * FROM wproducts");
                     <li class="nav-item">
                         <a class="nav-link" href="promotion_update.php">Promotion Update Page</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="feedbackview.php">Feedback</a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
@@ -77,7 +80,7 @@ $result = $conn->query("SELECT * FROM wproducts");
 
     <!-- Main Content -->
     <div class="container mt-5">
-        <h2>Add New WProduct</h2>
+        <h2>Add New Women Product</h2>
         <form action="wprocess.php" method="post" enctype="multipart/form-data">
             <input type="hidden" name="action" value="add_wproduct">
             <div class="mb-3">

@@ -1,477 +1,554 @@
+<?php
+include 'config.php';
+
+$user_id = $_SESSION['user_id'];
+
+if (!isset($user_id)) {
+   header('location:login.php');
+   exit; // Always exit after a redirect
+}
+
+$message = []; // Initialize the message array
+
+if (isset($_POST['add_to_cart'])) {
+   $product_name = $_POST['product_name'];
+   $product_price = $_POST['product_price'];
+   $product_image = $_POST['product_image'];
+   $product_quantity = $_POST['product_quantity'];
+   $product_size = $_POST['product_size']; 
+
+   // Check if the product already exists in the cart for the user
+   $check_cart_query = "SELECT * FROM `cart` WHERE name = '$product_name' AND user_id = '$user_id'";
+   $check_cart_result = mysqli_query($conn, $check_cart_query);
+   
+   if (mysqli_num_rows($check_cart_result) > 0) {
+      $message[] = 'Already added to cart!';
+   } else {
+      // Insert the product into the cart
+      $insert_cart_query = "INSERT INTO `cart` (user_id, name, price, quantity, image, size) 
+                           VALUES ('$user_id', '$product_name', '$product_price', '$product_quantity', '$product_image', '$product_size')";
+      
+      if (mysqli_query($conn, $insert_cart_query)) {
+         $message[] = 'Product added to cart!';
+      } else {
+         $message[] = 'Failed to add product to cart: ' . mysqli_error($conn);
+      }
+   }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Men's Catalogue - Flex Sports Wear</title>
-   
-    <!-- jQuery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Flex Sports Wear</title>
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
+   <!-- jQuery -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-    <!-- Bootstrap Js -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+   <!-- Bootstrap CSS -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
 
-        <!-- Your CSS -->
-    <style>
-        body {
-            background-color: #dedede;
-        }
-        
-        .navbar {
-            padding: 0px 100px; /* Adjust the padding */
-        }
-       
-        .navbar-nav .nav-link {
-            margin-right: 20px;
-            font-size: 15px;
-            font-family: Copperplate;
-            transition: border-bottom 0.9s ease;
-        }
+   <!-- Bootstrap Js -->
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 
-        .navbar-nav .nav-link:hover {
-            border-bottom: 1px solid;
-        }
-            
-        .member-button {
-            margin-left: 100px;
-            color: #FFFFFF;
-            background-color: transparent;
-            border: none;
-        }
+   <!-- Font Awesome -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-        * {
-            box-sizing: border-box;
-        }
+   <!-- Your CSS -->
+   <style>
+      body {
+         background-color: #dedede;
+      }
 
-        .search-box {
-            width: fit-content;
-            height: fit-content;
-            position: relative;
-        }
+      .navbar {
+         padding: 0px 100px;
+         /* Adjust the padding */
+      }
 
-        .input-search {
-            height: 30px;
-            width: 30px;
-            border: none;
-            padding: 10px;
-            font-size: 18px;
-            letter-spacing: 2px;
-            outline: none;
-            border-radius: 40px;
-            transition: width 0.5s ease-in-out; /* Added transition */
-            background-color: #E7E7E7;
-            color: #000000;
-        }
+      .navbar-nav .nav-link {
+         margin-right: 20px;
+         font-size: 15px;
+         font-family: Copperplate;
+         transition: border-bottom 0.9s ease;
+      }
 
-        .input-search::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 18px;
-            letter-spacing: 2px;
-            font-weight: 100;
-        }
+      .navbar-nav .nav-link:hover {
+         border-bottom: 1px solid;
+      }
 
-        .btn-search {
-            width: 40px;
-            height: 40px;
-            border: none;
-            font-size: 20px;
-            outline: none;
-            cursor: pointer;
-            border-radius: 50%;
-            position: absolute;
-            right: -5px;
-            top: -25px; /* Adjusted top position for responsiveness */
-            transform: translateY(50%); /* Center vertically */
-            color: #000000;
-        }
+      .member-button {
+         margin-left: 100px;
+         color: #FFFFFF;
+         background-color: transparent;
+         border: none;
+      }
 
-        .btn-search:focus ~ .input-search {
-            width: 200px;
-            border-radius: 10px;
-            outline: none;
-            border: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-            transition: all 500ms cubic-bezier(0, 0.11, 0.35, 2);
-        }
+      * {
+         box-sizing: border-box;
+      }
 
-        .input-search:focus {
-            width: 200px;
-            border-radius: 20px;
-            border: 10px;
-            border-color: #000000;
-            background-color: #E7E7E7;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-            transition: all 500ms cubic-bezier(0, 0.11, 0.35, 2);
-        }
-        
-        .btn-profile {
-            border: none;
-            font-size: 20px;
-            outline: none;
-            cursor: pointer;
-            border-radius: 50%;
-            position: absolute;
-            right: 10px; /* Adjusted position */
-            top: 25px; /* Adjusted top position for responsiveness */
-            transform: translateY(50%); /* Center vertically */
-            color: #000000;
-        }
-        
-        .card {
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s ease-in-out;
-            margin-bottom: 20px; /* Added margin bottom for spacing */
-        }
+      .search-box {
+         width: fit-content;
+         height: fit-content;
+         position: relative;
+      }
 
-        .card:hover {
-            transform: translateY(-10px);
-        }
+      .input-search {
+         height: 30px;
+         width: 30px;
+         border: none;
+         padding: 10px;
+         font-size: 18px;
+         letter-spacing: 2px;
+         outline: none;
+         border-radius: 40px;
+         transition: width 0.5s ease-in-out;
+         /* Added transition */
+         background-color: #E7E7E7;
+         color: #000000;
+      }
 
-        .card img {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-        }
+      .input-search::placeholder {
+         color: rgba(255, 255, 255, 0.5);
+         font-size: 18px;
+         letter-spacing: 2px;
+         font-weight: 100;
+      }
 
-        .card-body {
-            padding: 15px;
-        }
+      .btn-search {
+         width: 40px;
+         height: 40px;
+         border: none;
+         font-size: 20px;
+         outline: none;
+         cursor: pointer;
+         border-radius: 50%;
+         position: absolute;
+         right: -5px;
+         top: -25px;
+         /* Adjusted top position for responsiveness */
+         transform: translateY(50%);
+         /* Center vertically */
+         color: #000000;
+      }
 
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: bold;
-        }
+      .btn-search:focus~.input-search {
+         width: 200px;
+         border-radius: 10px;
+         outline: none;
+         border: none;
+         border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+         transition: all 500ms cubic-bezier(0, 0.11, 0.35, 2);
+      }
 
-        .card-text {
-            font-size: 1rem;
-            color: #666;
-        }
+      .input-search:focus {
+         width: 200px;
+         border-radius: 20px;
+         border: 10px;
+         border-color: #000000;
+         background-color: #E7E7E7;
+         border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+         transition: all 500ms cubic-bezier(0, 0.11, 0.35, 2);
+      }
 
-        /* Styles for the text */
-        .text {
-            margin-top: 50px; /* Spacing from the navbar */
-            text-transform: uppercase;
-            font-family: verdana;
-            font-size: 6em; /* Adjust font size for responsiveness */
-            font-weight: 700;
-            color: #f5f5f5;
-            text-shadow: 1px 1px 1px #919191,
-                        1px 2px 1px #919191,
-                        1px 3px 1px #919191,
-                        1px 4px 1px #919191,
-                        1px 5px 1px #919191,
-                        1px 6px 1px #919191,
-                        1px 7px 1px #919191,
-                        1px 8px 1px #919191,
-                        1px 9px 1px #919191,
-                        1px 10px 1px #919191,
-                        1px 18px 6px rgba(16,16,16,0.4),
-                        1px 22px 10px rgba(16,16,16,0.2),
-                        1px 25px 35px rgba(16,16,16,0.2),
-                        1px 30px 60px rgba(16,16,16,0.4);
-            text-align: center;
-        }
+      .btn-profile {
+         border: none;
+         font-size: 20px;
+         outline: none;
+         cursor: pointer;
+         border-radius: 50%;
+         position: absolute;
+         right: 10px;
+         /* Adjusted position */
+         top: 25px;
+         /* Adjusted top position for responsiveness */
+         transform: translateY(50%);
+         /* Center vertically */
+         color: #000000;
+      }
 
-        /* Floating Cart Button */
-        .floating-cart {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
+      .card {
+         border-radius: 15px;
+         overflow: hidden;
+         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+         transition: transform 0.2s ease-in-out;
+         margin-bottom: 20px;
+         /* Added margin bottom for spacing */
+      }
 
-        .cart-item {
-            margin-bottom: 10px;
-        }
-        
-        .cart-total {
-            font-weight: bold;
-            margin-top: 10px;
-        }
-    </style>
+      .card:hover {
+         transform: translateY(-10px);
+      }
+
+      .card img {
+         width: 100%;
+         height: 400px;
+         object-fit: cover;
+      }
+
+      .card-body {
+         padding: 15px;
+      }
+
+      .card-title {
+         font-size: 1.25rem;
+         font-weight: bold;
+      }
+
+      .card-text {
+         font-size: 1rem;
+         color: #666;
+      }
+
+      /* Styles for the text */
+      .text {
+         margin-top: 50px;
+         /* Spacing from the navbar */
+         text-transform: uppercase;
+         font-family: verdana;
+         font-size: 6em;
+         /* Adjust font size for responsiveness */
+         font-weight: 700;
+         color: #f5f5f5;
+         text-shadow: 1px 1px 1px #919191,
+            1px 2px 1px #919191,
+            1px 3px 1px #919191,
+            1px 4px 1px #919191,
+            1px 5px 1px #919191,
+            1px 6px 1px #919191,
+            1px 7px 1px #919191,
+            1px 8px 1px #919191,
+            1px 9px 1px #919191,
+            1px 10px 1px #919191,
+            1px 18px 6px rgba(16, 16, 16, 0.4),
+            1px 22px 10px rgba(16, 16, 16, 0.2),
+            1px 25px 35px rgba(16, 16, 16, 0.2),
+            1px 30px 60px rgba(16, 16, 16, 0.4);
+         text-align: center;
+      }
+      .site-footer
+{
+  background-color:#26272b;
+  padding:45px 0 20px;
+  font-size:15px;
+  line-height:24px;
+  color:#737373;
+}
+.site-footer hr
+{
+  border-top-color:#bbb;
+  opacity:0.5
+}
+.site-footer hr.small
+{
+  margin:20px 0
+}
+.site-footer h6
+{
+  color:#fff;
+  font-size:16px;
+  text-transform:uppercase;
+  margin-top:5px;
+  letter-spacing:2px
+}
+.site-footer a
+{
+  color:#737373;
+}
+.site-footer a:hover
+{
+  color:#3366cc;
+  text-decoration:none;
+}
+.footer-links
+{
+  padding-left:0;
+  list-style:none
+}
+.footer-links li
+{
+  display:block
+}
+.footer-links a
+{
+  color:#737373
+}
+.footer-links a:active,.footer-links a:focus,.footer-links a:hover
+{
+  color:#3366cc;
+  text-decoration:none;
+}
+.footer-links.inline li
+{
+  display:inline-block
+}
+.site-footer .social-icons
+{
+  text-align:right
+}
+.site-footer .social-icons a
+{
+  width:40px;
+  height:40px;
+  line-height:40px;
+  margin-left:6px;
+  margin-right:0;
+  border-radius:100%;
+  background-color:#33353d
+}
+.copyright-text
+{
+  margin:0
+}
+@media (max-width:991px)
+{
+  .site-footer [class^=col-]
+  {
+    margin-bottom:30px
+  }
+}
+@media (max-width:767px)
+{
+  .site-footer
+  {
+    margin-top: 60px;
+    padding-bottom:0
+  }
+  .site-footer .copyright-text,.site-footer .social-icons
+  {
+    text-align:center
+  }
+}
+.social-icons
+{
+  padding-left:0;
+  margin-bottom:0;
+  list-style:none
+}
+.social-icons li
+{
+  display:inline-block;
+  margin-bottom:4px
+}
+.social-icons li.title
+{
+  margin-right:15px;
+  text-transform:uppercase;
+  color:#96a2b2;
+  font-weight:700;
+  font-size:13px
+}
+.social-icons a{
+  background-color:#eceeef;
+  color:#818a91;
+  font-size:16px;
+  display:inline-block;
+  line-height:44px;
+  width:44px;
+  height:44px;
+  text-align:center;
+  margin-right:8px;
+  border-radius:100%;
+  -webkit-transition:all .2s linear;
+  -o-transition:all .2s linear;
+  transition:all .2s linear
+}
+.social-icons a:active,.social-icons a:focus,.social-icons a:hover
+{
+  color:#fff;
+  background-color:#29aafe
+}
+.social-icons.size-sm a
+{
+  line-height:34px;
+  height:34px;
+  width:34px;
+  font-size:14px
+}
+.social-icons a.facebook:hover
+{
+  background-color:#3b5998
+}
+.social-icons a.twitter:hover
+{
+  background-color:#00aced
+}
+.social-icons a.linkedin:hover
+{
+  background-color:#007bb6
+}
+.social-icons a.dribbble:hover
+{
+  background-color:#ea4c89
+}
+@media (max-width:767px)
+{
+  .social-icons li.title
+  {
+    display:block;
+    margin-right:0;
+    font-weight:600
+  }
+}
+      
+   </style>
 
 </head>
-<body>
 
-    <!-- Navigation bar -->
-    <div class="member-navbar" style="background-color: #000000;">
+<body>
+<div class="member-navbar" style="background-color: #000000;">
         <a href="userloginpage.php"> <button type="button" class="member-button">FREE SHIPPING FOR MEMBERS</button></a>
     </div>
-    
-    <div class="navigation-wrap bg-light start-header start-style">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <nav class="navbar navbar-expand-md navbar-light">
-                        <a href="index.php">
-                            <img src="logo.jpg" alt="Logo" style="width: 200px; height:120px; margin-left:-150px;">
-                        </a>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav ml-auto py-4 py-md-0">
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
-                                    <a class="nav-link" href="MenCatalogue.php" role="button" aria-haspopup="true" aria-expanded="false">MEN</a>
-                                </li>
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
-                                    <a class="nav-link" href="WomenCatalogue.php" role="button" aria-haspopup="true" aria-expanded="false">WOMEN</a>
-                                </li>
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a class="nav-link" href="">Order History</a>
-                                </li>
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a class="nav-link" href="user_promotion.php">Promotion</a>
-                                </li>
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a class="nav-link" href="feedbackpage.php">Feedback</a>
-                                </li>
-                                <!-- Profile Icon -->
-                               <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-    <a class="btn-profile" href="profilepage.php">
-        <i class="fas fa-user"></i>
-    </a>
-</li>
-                                <!-- Search Box -->
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <div class="search-box">
-                                        <button class="btn-search"><i class="fas fa-search"></i></button>
-                                        <input type="text" class="input-search" placeholder="Search">
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>      
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Product Display Section -->
-    <div class="text">Mens</div>
-
-    <div class="container mt-5">
+  <div class="navigation-wrap bg-light start-header start-style">
+    <div class="container">
         <div class="row">
-            <?php
-            // Database connection
-            $hostname = "localhost";
-            $username = "root";
-            $password = "";
-            $database_name = "flex_db"; // Replace with your actual database name
-
-            // Create connection
-            $conn = new mysqli($hostname, $username, $password, $database_name);
-
-            // Check connection
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            }
-
-            // Query to fetch products from database
-            $sql = "SELECT * FROM products";
-            $result = $conn->query($sql);
-
-            // Display products
-            if ($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
-                    ?>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <img src="<?php echo $row['image']; ?>" alt="Product Image" class="card-img-top">
-                            <div class="card-body">
-                                <h5 class="card-title"><?php echo $row['name']; ?></h5>
-                                <p class="card-text"><?php echo $row['description']; ?></p>
-                                <p class="card-text">Price: RM <?php echo number_format($row['price'], 2); ?></p>
-                                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#sizeSelectionModal" data-product-id="<?php echo $row['id']; ?>">Select Size</a>
-                            </div>
-                        </div>
-                    </div>
-                    <?php
-                }
-            } else {
-                echo "<p>No products available.</p>";
-            }
-
-            // Close connection
-            $conn->close();
-            ?>
-        </div>
-    </div>
-
-    <!-- Size Selection Modal -->
-    <div class="modal fade" id="sizeSelectionModal" tabindex="-1" role="dialog" aria-labelledby="sizeSelectionModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="sizeSelectionModalLabel">Select Size</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+            <div class="col-12">
+                <nav class="navbar navbar-expand-md navbar-light">
+                    <a href="index.php">
+                        <img src="logo.jpg" alt="Logo" style="width: 200px; height: 120px; margin-left: -150px;">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
                     </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Product details will be dynamically populated here -->
-                    <div id="product-details">
-                        <img src="" alt="Product Image" id="product-image" style="max-width: 100%; height: auto;">
-                        <h5 id="product-name"></h5>
-                        <p id="product-description"></p>
-                        <p id="product-price"></p>
-                    </div>
                     
-                    <!-- Form for selecting size -->
-                    <form id="sizeSelectionForm">
-                        <div class="form-group">
-                            <label for="selectedSize">Size:</label>
-                            <select class="form-control" id="selectedSize" required>
-                                <option value="">Select Size</option>
-                                <option value="S">Small/UK6</option>
-                                <option value="M">Medium/UK7</option>
-                                <option value="L">Large/UK8</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="quantity">Quantity:</label>
-                            <input type="number" class="form-control" id="quantity" value="1" min="1">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Add to Cart</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-   <!-- Floating Cart Button -->
-<div class="floating-cart">
-    <button class="btn btn-primary" id="cart-button">
-        <i class="fas fa-shopping-cart"></i> Cart
-        <span id="cart-count" class="badge badge-light">0</span>
-    </button>
-</div>
-
-<!-- Cart Popup Modal -->
-<div class="modal fade" id="cartPopupModal" tabindex="-1" role="dialog" aria-labelledby="cartPopupModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="cartPopupModalLabel">Shopping Cart</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div id="cart-items-popup">
-                    <!-- Cart items will be displayed here -->
-                </div>
-                <div id="cart-total-popup" class="cart-total">
-                    Total: RM <span id="cart-total-amount-popup">0.00</span>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Continue Shopping</button>
-                <button type="button" class="btn btn-primary" id="checkout-button">Checkout</button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ml-auto py-4 py-md-0">
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
+                                <a class="nav-link" href="MenCatalogue.php" role="button" aria-haspopup="true" aria-expanded="false">MEN</a>
+                            </li>
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
+                                <a class="nav-link" href="WomenCatalogue.php" role="button" aria-haspopup="true" aria-expanded="false">WOMEN</a>
+                            </li>
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                <a class="nav-link" href="order.php">Order History</a>
+                            </li>
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                <a class="nav-link" href="user_promotion.php">Promotion</a>
+                            </li>
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                <a class="nav-link" href="feedbackpage.php">Feedback</a>
+                            </li>
+                            <!-- Profile Icon -->
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                <a class="btn-profile" href="profilepage.php">
+                                    <i class="fas fa-user"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                <a href="cart.php">
+                                    <i class="fas fa-shopping-cart"></i> <span></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Your Scripts -->
-<script>
-    $(document).ready(function() {
-        // Cart management
-        var cartItems = [];
+   <section class="products">
 
-        function addToCart(product, price, size) {
-            var item = {
-                product: product,
-                price: price,
-                size: size
-            };
-            cartItems.push(item);
-            updateCartCount();
-        }
+      <div class="text">Mens</div>
 
-        function updateCartCount() {
-            var count = cartItems.length;
-            $('#cart-count').text(count);
-        }
+          <div class="container mt-5">
+<div class="row">
+         <?php
+         $select_products = mysqli_query($conn, "SELECT * FROM `products`") or die('query failed');
+         if (mysqli_num_rows($select_products) > 0) {
+            while ($fetch_products = mysqli_fetch_assoc($select_products)) {
+         ?>
+              <div class="col-md-4">
+    <div class="card">
+        <img src="<?php echo $fetch_products['image']; ?>" alt="Product Image" class="card-img-top">
+        <div class="card-body">
+            <h5 class="card-title"><?php echo $fetch_products['name']; ?></h5>
+            <p class="card-text"><?php echo $fetch_products['description']; ?></p>
+            <p class="card-text">Price: RM <?php echo number_format($fetch_products['price'], 2); ?></p>
+            <form action="" method="post">
+    <input type="hidden" name="product_name" value="<?php echo $fetch_products['name']; ?>">
+    <input type="hidden" name="product_price" value="<?php echo $fetch_products['price']; ?>">
+    <input type="hidden" name="product_image" value="<?php echo $fetch_products['image']; ?>">
+    
+    <!-- Select size -->
+    <label for="size">Select Size:</label>
+    <select name="product_size">
+        <option value="S">S</option>
+        <option value="M">M</option>
+        <option value="L">L</option>
+    </select>
+    
+    <!-- Select quantity -->
+    <label for="quantity">Quantity:</label>
+    <input type="number" name="product_quantity" value="1" min="1" max="10"> <!-- Adjust max quantity as needed -->
+    
+    <input type="submit" value="Add to Cart" name="add_to_cart" class="btn btn-primary">
+</form>
+        </div>
+    </div>
+</div>
 
-        // Floating cart button behavior
-        $('#cart-button').click(function() {
-            updateCartPopup();
-            $('#cartPopupModal').modal('show');
-        });
 
-        // Update cart popup content
-        function updateCartPopup() {
-            var cartItemsHtml = '';
-            var totalAmount = 0;
-            cartItems.forEach(function(item, index) {
-                cartItemsHtml += '<div class="cart-item-popup">' +
-                                    '<p>' + item.product + ' - Size: ' + item.size + ' - RM ' + item.price.toFixed(2) + '</p>' +
-                                '</div>';
-                totalAmount += item.price;
-            });
-            $('#cart-items-popup').html(cartItemsHtml);
-            $('#cart-total-amount-popup').text(totalAmount.toFixed(2));
-        }
-
-        // Checkout button behavior
-        $('#checkout-button').click(function() {
-            // Proceed to checkout (save cart items to database)
-            saveCartItems();
-            // Close the cart popup modal
-            $('#cartPopupModal').modal('hide');
-            // Optionally, redirect to checkout page or display confirmation message
-        });
-
-        // Function to save cart items to database
-        function saveCartItems() {
-            // Simulated user_id and product_id
-            var user_id = 1; // Replace with actual user ID (if available)
-            var product_id = 0; // Replace with actual product ID (if available)
-
-            // Loop through cartItems and save each item to database
-            cartItems.forEach(function(item) {
-                var price = item.price;
-                var quantity = 1; // For simplicity, assuming quantity is 1 per item
-
-                // AJAX call to save cart item to database
-                $.ajax({
-                    method: 'POST',
-                    url: 'save_cart_item.php', // PHP script to save cart item to database
-                    data: {
-                        user_id: user_id,
-                        product_id: product_id,
-                        price: price,
-                        quantity: quantity,
-                        size: item.size
-                    },
-                    success: function(response) {
-                        console.log('Cart item saved:', response);
-                        // Handle success (e.g., display success message)
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error saving cart item:', error);
-                        // Handle error (e.g., display error message)
-                    }
-                });
-            });
-
-            // Clear cart items after saving
-            cartItems = [];
-            updateCartCount();
-            updateCartPopup(); // Update cart popup to reflect cleared items
-        }
-    });
-</script>
+         <?php
+            }
+         } else {
+            echo '<p class="empty">No products added yet!</p>';
+         }
+         ?>
+      </div>
+          </div>
+     
+      
+   </section>
+   <!-- Site footer -->
+<footer class="site-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <h6>Categories</h6>
+                <ul class="footer-links">
+                    <li><a href="MenCatalogue.php">Men Catalogue</a></li>
+                    <li><a href="WomenCatalogue.php">Women Catalogue</a></li>
+                    <li><a href="order.php">Order History</a></li>
+                    <li><a href="user_promotion">Promotion</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <h6>Quick Links</h6>
+                <ul class="footer-links">
+                    <li><a href="feedbackpage.php">Feedback</a></li>
+                    <li><a href="cart.php">Cart</a></li>
+                    <li><a href="profilepage.php">Profile</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <h6>About Us</h6>
+                <p class="text-justify">Flex Sport Wear is dedicated to providing high-quality sportswear for men and women. Explore our catalog and enjoy exclusive promotions.</p>
+            </div>
+        </div>
+        <hr>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+                <p class="copyright-text">Copyright &copy; 2024 All Rights Reserved by 
+                    <a href="#">Flex Sport Wear</a>.
+                </p>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <ul class="social-icons">
+                    <li><a class="facebook" href="#"><i class="fab fa-facebook"></i></a></li>
+                    <li><a class="twitter" href="#"><i class="fab fa-twitter"></i></a></li>
+                    <li><a class="linkedin" href="#"><i class="fab fa-linkedin"></i></a></li>  
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
 
 </body>
+
 </html>

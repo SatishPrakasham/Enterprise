@@ -3,14 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Feedback</title>
-    <!-- Bootstrap CSS -->
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css'>
-    <!-- Bootstrap Js -->
-    <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js'></script>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <!-- Your CSS -->
+    <title>Admin Panel - WProduct</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+      <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="admin_dashboard.php">Admin Panel</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin.php">Product</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="wadmin.php">WProduct</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="user_accounts.php"> User Account</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin_sales_report.php">Admin Sales Analytics Report</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="check_user_order.php"> User Order</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="promotion_update.php">Promotion Update Page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="feedbackview.php">Feedback</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     <style>
         body {
             background-color: #dedede;
@@ -74,5 +110,12 @@
     </div>
 </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function logout() {
+            // Implement logout functionality
+            window.location.href = 'logout.php';
+        }
+    </script>
 </body>
 </html>

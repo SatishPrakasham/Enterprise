@@ -51,6 +51,9 @@ $result = $conn->query("SELECT * FROM products");
                         <a class="nav-link" href="admin.php">Product</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="wadmin.php">WProduct</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="user_accounts.php"> User Account</a>
                     </li>
                     <li class="nav-item">
@@ -61,6 +64,9 @@ $result = $conn->query("SELECT * FROM products");
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="promotion_update.php">Promotion Update Page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="feedbackview.php">Feedback</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
@@ -74,7 +80,7 @@ $result = $conn->query("SELECT * FROM products");
 
     <!-- Main Content -->
     <div class="container mt-5">
-        <h2>Add New Product</h2>
+        <h2>Add New Men Product</h2>
         <form action="process.php" method="post" enctype="multipart/form-data">
             <input type="hidden" name="action" value="add_product">
             <div class="mb-3">

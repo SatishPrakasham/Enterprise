@@ -19,7 +19,7 @@ $result = $conn->query("SELECT * FROM users");
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Navigation Bar -->
+     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="admin_dashboard.php">Admin Panel</a>
@@ -32,7 +32,10 @@ $result = $conn->query("SELECT * FROM users");
                         <a class="nav-link" href="admin.php">Product</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="user_accounts.php"> User Account</a>
+                        <a class="nav-link" href="wadmin.php">WProduct</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="user_accounts.php"> User Account</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="admin_sales_report.php">Admin Sales Analytics Report</a>
@@ -42,6 +45,9 @@ $result = $conn->query("SELECT * FROM users");
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="promotion_update.php">Promotion Update Page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="feedbackview.php">Feedback</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
@@ -63,8 +69,6 @@ $result = $conn->query("SELECT * FROM users");
                         <th>ID</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Address</th>
-                        <th>Contact Number</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -72,10 +76,8 @@ $result = $conn->query("SELECT * FROM users");
                     <?php while ($row = $result->fetch_assoc()) { ?>
                     <tr>
                         <td><?php echo $row['id']; ?></td>
-                        <td><?php echo $row['uname']; ?></td>
-                        <td><?php echo $row['user_email']; ?></td>
-                        <td><?php echo $row['address']; ?></td>
-                        <td><?php echo $row['pnumber']; ?></td>
+                        <td><?php echo $row['name']; ?></td>
+                        <td><?php echo $row['email']; ?></td>
                         <td>
                             <form action="user_accounts.php" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="delete_user">

@@ -4,13 +4,12 @@
 // Include the database connection file
 require_once 'config.php';
 
-// Fetch monthly sales data
+// Fetch monthly sales data for completed orders
 $query = "
-    SELECT DATE_FORMAT(orders.order_date, '%Y-%m') AS month, 
-           SUM(order_items.quantity * order_items.price) AS total_sales 
+    SELECT DATE_FORMAT(orders.placed_on, '%Y-%m') AS month, 
+           SUM(orders.total_price) AS total_sales 
     FROM orders
-    JOIN order_items ON orders.id = order_items.order_id
-    WHERE orders.status = 'Completed'
+    WHERE orders.payment_status = 'completed'
     GROUP BY month
     ORDER BY month";
     
@@ -42,7 +41,7 @@ $sales_json = json_encode($sales);
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Navigation Bar -->
+     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="admin_dashboard.php">Admin Panel</a>
@@ -55,16 +54,22 @@ $sales_json = json_encode($sales);
                         <a class="nav-link" href="admin.php">Product</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="user_accounts.php">User Account</a>
+                        <a class="nav-link" href="wadmin.php">WProduct</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="admin_sales_report.php">Admin Sales Analytics Report</a>
+                        <a class="nav-link" href="user_accounts.php"> User Account</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="check_user_order.php">User Order</a>
+                        <a class="nav-link" href="admin_sales_report.php">Admin Sales Analytics Report</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="check_user_order.php"> User Order</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="promotion_update.php">Promotion Update Page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="feedbackview.php">Feedback</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
@@ -75,10 +80,9 @@ $sales_json = json_encode($sales);
             </div>
         </div>
     </nav>
-
     <!-- Main Content -->
     <div class="container mt-5">
-        <h2>Monthly Sales Analytics Report</h2>
+        <h2>Monthly Sales Analytics Report (Completed Orders Only)</h2>
         <canvas id="salesChart" width="400" height="200"></canvas>
     </div>
 
@@ -94,7 +98,7 @@ $sales_json = json_encode($sales);
             data: {
                 labels: months,
                 datasets: [{
-                    label: 'Total Sales',
+                    label: 'Total Sales In RM',
                     data: sales,
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderColor: 'rgba(75, 192, 192, 1)',
@@ -120,3 +124,4 @@ $sales_json = json_encode($sales);
     </script>
 </body>
 </html>
+

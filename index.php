@@ -1,3 +1,25 @@
+<?php
+// Start the session at the beginning of the script
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Check if session variables are set before accessing them
+$username = isset($_SESSION['username']) ? $_SESSION['username'] : 'Guest';
+$email = isset($_SESSION['email']) ? $_SESSION['email'] : 'Not logged in';
+
+
+if(isset($message)){
+   foreach($message as $message){
+      echo '
+      <div class="message">
+         <span>'.$message.'</span>
+         <i class="fas fa-times" onclick="this.parentElement.remove();"></i>
+      </div>
+      ';
+   }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -449,61 +471,59 @@
     </style>
 
 </head>
+<body>
 <div class="member-navbar" style="background-color: #000000;">
         <a href="userloginpage.php"> <button type="button" class="member-button">FREE SHIPPING FOR MEMBERS</button></a>
     </div>
     
     <div class="navigation-wrap bg-light start-header start-style">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <nav class="navbar navbar-expand-md navbar-light">
-                        <a href="index.php">
-                           <img src="logo.jpg" alt="Logo" style="width: 200px; height:120px; margin-left:-150px;">	</a>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav ml-auto py-4 py-md-0">
-                               <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
-        <a class="nav-link" href="MenCatalogue.php" role="button" aria-haspopup="true" aria-expanded="false">MEN</a>
-    </li>
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
-        <a class="nav-link" href="WomenCatalogue.php" role="button" aria-haspopup="true" aria-expanded="false">WOMEN</a>
-    </li>
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a class="nav-link" href="">Order History</a>
-                                </li>
-                               
-                               
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a class="nav-link" href="user_promotion.php">Promotion</a>
-                                </li>
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a class="nav-link" href="feedbackpage.php">Feedback</a>
-                                </li>
-                                <!-- Profile Icon -->
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-    <a class="btn-profile" href="profilepage.php">
-        <i class="fas fa-user"></i>
-    </a>
-</li>
-                                <!-- Search Box -->
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <div class="search-box">
-                                        <button class="btn-search"><i class="fas fa-search"></i></button>
-                                        <input type="text" class="input-search" placeholder=" Type to Search..." style="font-size:15px;">
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>
-                </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav class="navbar navbar-expand-md navbar-light">
+                    <a href="index.php">
+                        <img src="logo.jpg" alt="Logo" style="width: 200px; height: 120px; margin-left: -150px;">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ml-auto py-4 py-md-0">
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
+                                <a class="nav-link" href="MenCatalogue.php" role="button" aria-haspopup="true" aria-expanded="false">MEN</a>
+                            </li>
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
+                                <a class="nav-link" href="WomenCatalogue.php" role="button" aria-haspopup="true" aria-expanded="false">WOMEN</a>
+                            </li>
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                <a class="nav-link" href="order.php">Order History</a>
+                            </li>
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                <a class="nav-link" href="user_promotion.php">Promotion</a>
+                            </li>
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                <a class="nav-link" href="feedbackpage.php">Feedback</a>
+                            </li>
+                            <!-- Profile Icon -->
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                <a class="btn-profile" href="profilepage.php">
+                                    <i class="fas fa-user"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                <a href="cart.php">
+                                    <i class="fas fa-shopping-cart"></i> <span></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
             </div>
         </div>
     </div>
-    
+</div>
+
     <div class="container">
         <div class="gallery">
             <div class="img-box"><h3>Adidas</h3></div>
@@ -553,59 +573,52 @@
             </div>
         </div>
     </div>
-    <!-- Site footer -->
-    <footer class="site-footer">
-      <div class="container">
+   <!-- Site footer -->
+<footer class="site-footer">
+    <div class="container">
         <div class="row">
-          <div class="col-sm-12 col-md-6">
-            <h6>About</h6>
-            <p class="text-justify">Scanfcode.com <i>CODE WANTS TO BE SIMPLE </i> is an initiative  to help the upcoming programmers with the code. Scanfcode focuses on providing the most efficient code or snippets as the code wants to be simple. We will help programmers build up concepts in different programming languages that include C, C++, Java, HTML, CSS, Bootstrap, JavaScript, PHP, Android, SQL and Algorithm.</p>
-          </div>
-
-          <div class="col-xs-6 col-md-3">
-            <h6>Categories</h6>
-            <ul class="footer-links">
-              <li><a href="http://scanfcode.com/category/c-language/">C</a></li>
-              <li><a href="http://scanfcode.com/category/front-end-development/">UI Design</a></li>
-              <li><a href="http://scanfcode.com/category/back-end-development/">PHP</a></li>
-              <li><a href="http://scanfcode.com/category/java-programming-language/">Java</a></li>
-              <li><a href="http://scanfcode.com/category/android/">Android</a></li>
-              <li><a href="http://scanfcode.com/category/templates/">Templates</a></li>
-            </ul>
-          </div>
-
-          <div class="col-xs-6 col-md-3">
-            <h6>Quick Links</h6>
-            <ul class="footer-links">
-              <li><a href="http://scanfcode.com/about/">About Us</a></li>
-              <li><a href="http://scanfcode.com/contact/">Contact Us</a></li>
-              <li><a href="http://scanfcode.com/contribute-at-scanfcode/">Contribute</a></li>
-              <li><a href="http://scanfcode.com/privacy-policy/">Privacy Policy</a></li>
-              <li><a href="http://scanfcode.com/sitemap/">Sitemap</a></li>
-            </ul>
-          </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <h6>Categories</h6>
+                <ul class="footer-links">
+                    <li><a href="MenCatalogue.php">Men Catalogue</a></li>
+                    <li><a href="WomenCatalogue.php">Women Catalogue</a></li>
+                    <li><a href="order.php">Order History</a></li>
+                    <li><a href="user_promotion">Promotion</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <h6>Quick Links</h6>
+                <ul class="footer-links">
+                    <li><a href="feedbackpage.php">Feedback</a></li>
+                    <li><a href="cart.php">Cart</a></li>
+                    <li><a href="profilepage.php">Profile</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <h6>About Us</h6>
+                <p class="text-justify">Flex Sport Wear is dedicated to providing high-quality sportswear for men and women. Explore our catalog and enjoy exclusive promotions.</p>
+            </div>
         </div>
         <hr>
-      </div>
-      <div class="container">
+    </div>
+    <div class="container">
         <div class="row">
-          <div class="col-md-8 col-sm-6 col-xs-12">
-            <p class="copyright-text">Copyright &copy; 2017 All Rights Reserved by 
-         <a href="#">Scan code</a>.
-            </p>
-          </div>
-
-          <div class="col-md-4 col-sm-6 col-xs-12">
-            <ul class="social-icons">
-              <li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
-              <li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
-              <li><a class="dribbble" href="#"><i class="fa fa-dribbble"></i></a></li>
-              <li><a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a></li>   
-            </ul>
-          </div>
+            <div class="col-md-8 col-sm-6 col-xs-12">
+                <p class="copyright-text">Copyright &copy; 2024 All Rights Reserved by 
+                    <a href="#">Flex Sport Wear</a>.
+                </p>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <ul class="social-icons">
+                    <li><a class="facebook" href="#"><i class="fab fa-facebook"></i></a></li>
+                    <li><a class="twitter" href="#"><i class="fab fa-twitter"></i></a></li>
+                    <li><a class="linkedin" href="#"><i class="fab fa-linkedin"></i></a></li>  
+                </ul>
+            </div>
         </div>
-      </div>
+    </div>
 </footer>
+
     
 </body>
 </html>

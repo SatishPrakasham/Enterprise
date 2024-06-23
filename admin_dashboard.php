@@ -3,10 +3,10 @@
 
 session_start();
 
-// Check if admin is logged in
-if (!isset($_SESSION['admin_id'])) {
-    header("Location: admin_login.php");
-    exit;
+$admin_id = $_SESSION['admin_id'];
+
+if(!isset($admin_id)){
+   header('location:admin_login.php');
 }
 
 // Include database connection
@@ -15,6 +15,7 @@ require_once 'config.php';
 // Initialize variables to hold statistics
 $total_users = 0;
 $total_products = 0;
+$total_wproducts = 0;
 $total_orders = 0;
 
 // Fetch statistics from database
@@ -28,6 +29,12 @@ $stmt_products = $conn->query("SELECT COUNT(*) AS total_products FROM products")
 if ($stmt_products) {
     $total_products = $stmt_products->fetch_assoc()['total_products'];
     $stmt_products->close();
+}
+
+$stmt_wproducts = $conn->query("SELECT COUNT(*) AS total_wproducts FROM wproducts");
+if ($stmt_wproducts) {
+    $total_wproducts = $stmt_wproducts->fetch_assoc()['total_wproducts'];
+    $stmt_wproducts->close();
 }
 
 $stmt_orders = $conn->query("SELECT COUNT(*) AS total_orders FROM orders");
@@ -50,10 +57,10 @@ $conn->close();
     <link rel="stylesheet" href="styles.css"> <!-- Adjust the path to your CSS file -->
 </head>
 <body>
-    <!-- Navigation Bar -->
+     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Admin Panel</a>
+            <a class="navbar-brand" href="admin_dashboard.php">Admin Panel</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -61,6 +68,9 @@ $conn->close();
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link" href="admin.php">Product</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="wadmin.php">WProduct</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="user_accounts.php"> User Account</a>
@@ -74,6 +84,9 @@ $conn->close();
                     <li class="nav-item">
                         <a class="nav-link" href="promotion_update.php">Promotion Update Page</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="feedbackview.php">Feedback</a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
@@ -83,7 +96,6 @@ $conn->close();
             </div>
         </div>
     </nav>
-
     <!-- Main Content -->
     <div class="container mt-5">
         <h2>Welcome, <?php echo $_SESSION['admin_username']; ?></h2>
@@ -101,6 +113,14 @@ $conn->close();
                     <div class="card-body">
                         <h5 class="card-title">Total Products</h5>
                         <p class="card-text"><?php echo $total_products; ?></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Women Products</h5>
+                        <p class="card-text"><?php echo $total_wproducts; ?></p>
                     </div>
                 </div>
             </div>
